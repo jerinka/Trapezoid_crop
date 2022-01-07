@@ -1,4 +1,4 @@
-# fourPointCrop
+# Trapezoid_Crop
 Clicking four points of trapezoid to crop it as a rectangle
 
 ![sample output](screenshot.png)
