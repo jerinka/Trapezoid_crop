@@ -6,17 +6,18 @@ import copy
 
 
 def put_text(image,txt,x0=50,y0=50):
-
+    h,w=image.shape[:2]
     # font 
     font = cv2.FONT_HERSHEY_SIMPLEX 
-    # org 
-    org = (x0, y0) 
     # fontScale 
-    fontScale = 1   
+    fontScale = int(h/500)
+    # org 
+    org = (x0, y0+2*fontScale) 
+      
     # Blue color in BGR 
     color = (0, 255, 0) 
     # Line thickness of 2 px 
-    thickness = 2
+    thickness = max(1,int(h/500))
     # Using cv2.putText() method 
     image = cv2.putText(image, txt, org, font,fontScale, color, thickness, cv2.LINE_AA) 
     return image
@@ -53,6 +54,9 @@ class MousePts:
             cv2.setMouseCallback("Image", self.draw_rectangle_with_drag)  
             while True:
                 img_copy = img.copy()
+                txt="Click on TL, TR, BR, BL points"
+                img_copy = put_text(img_copy, txt, 50, img.shape[0]//2)
+            
                 if len(self.pts) > 0:
                     points = np.array(self.pts, np.int32)
                     cv2.polylines(img_copy, [points], False, (255, 255, 255), 2)
@@ -130,7 +134,7 @@ class MousePts:
             self.img = self.img1.copy()
         
         txt = 'Click on '+str(count)+' points'
-        self.img1 = put_text(self.img1,txt)
+        self.img1 = put_text(self.img1,txt, 0, 100)
         cv2.namedWindow(self.windowname,cv2.WINDOW_NORMAL)
         cv2.imshow(self.windowname,self.img)
         cv2.setMouseCallback(self.windowname,self.select_point)
@@ -192,9 +196,15 @@ class MousePts:
         while(1):
             self.img = self.img1.copy()
             self.drawRect()
+            txt="Click on TL, TR, BR, BL points"
+            txt='Select rectangle top left and bottom right points'
+            self.img1 = put_text(self.img1, [[txt]], offsetval=(50, img.shape[0] - 80))
+            
             cv2.imshow(self.windowname,self.img)
             
             k = cv2.waitKey(20) & 0xFF
+            
+            import pdb;pdb.set_trace()
             if k == 27:
                 return [],[]
             if k == ord('r'):

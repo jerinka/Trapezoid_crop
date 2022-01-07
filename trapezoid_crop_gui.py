@@ -20,7 +20,7 @@ def trapezoidHandCrop(image):
     rows, cols = image.shape[:2]
     
     if 1:
-        src_points = MousePts(image).getpt(4)
+        src_points = MousePts().select_roi(image_copy)
         src_points = np.float32(src_points)
         np.savetxt('pts.txt', src_points)
     else:
@@ -59,7 +59,7 @@ def Get_warped_image(img, M=None):
     return warped
 
 if __name__=='__main__':
-    imgPath = 'images/newsample.png'
+    imgPath = '/home/skycam/Downloads/db-wt_frontview_copy/104337/4.jpg'
     
     image = cv2.imread(imgPath)
     crop_img = trapezoidHandCrop(image)
