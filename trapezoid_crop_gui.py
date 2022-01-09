@@ -4,6 +4,7 @@ import sys
 import numpy as np
 from math import sqrt
 import os.path as osp
+import argparse
 path = osp.dirname(osp.abspath(__file__))
 
 from MousePts import MousePts
@@ -15,7 +16,12 @@ def apply_transform(point_list,M):
 	out_point_list= (cv2.perspectiveTransform(np.array(point_list),M)).astype(int)
 	return out_point_list
 		
-def trapezoidHandCrop(image):
+def trapezoidHandCrop(image, ht=None, wd=None):
+    """
+    Function that asks user to click on four corner points of trapezoidal shape and 
+    generates rectangular transformed image of selected trapezoid. ht and wd are height and 
+    width of final crop image, by default it will be calculated based on input points.
+    """
     image_copy = image.copy()
     rows, cols = image.shape[:2]
     
@@ -30,6 +36,9 @@ def trapezoidHandCrop(image):
     pt1, pt2, pt3, pt4 = src_points
     w1 = get_euclidian_distance(pt2, pt1)
     h1 = get_euclidian_distance(pt2, pt3)
+    
+    w1 = wd if wd is not None else w1 #assign crop width as user's input
+    h1 = ht if ht is not None else h1 #assign crop height as user's input
     x1, y1 = 0, 0
     dst_points = np.float32([[x1,y1], [x1 + w1, y1], [x1 + w1, y1 + h1], [x1, y1 + h1]])
     
@@ -59,7 +68,10 @@ def Get_warped_image(img, M=None):
     return warped
 
 if __name__=='__main__':
-    imgPath = '/home/skycam/Downloads/db-wt_frontview_copy/104337/4.jpg'
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-p',"--path"  , default='crops/18.png', help="path of image")
+    args = parser.parse_args()
+    imgPath = args.path
     
     image = cv2.imread(imgPath)
     crop_img = trapezoidHandCrop(image)

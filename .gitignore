@@ -2,6 +2,10 @@
 __pycache__/
 *.py[cod]
 *$py.class
+crops/
+db-wt_frontview_copy/
+pts.txt
+
 
 # C extensions
 *.so
